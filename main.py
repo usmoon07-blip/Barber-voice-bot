@@ -27,7 +27,7 @@ async def main() -> None:
     owner_id = int(env("OWNER_ID"))
     admin_key = env("ADMIN_KEY")
     env("ANTHROPIC_API_KEY")
-    env("GOOGLE_APPLICATION_CREDENTIALS")
+    env("MUXLISA_API_KEY")
     public_url = env("PUBLIC_URL", required=False)
     port = int(env("PORT", required=False, default="8080"))
 

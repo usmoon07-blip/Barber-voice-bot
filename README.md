@@ -8,14 +8,18 @@ main.py      ishga tushirish (bot + admin panel bitta jarayonda)
 config.json  biznes sozlamalari (har mijoz uchun shu fayl o'zgaradi)
 bot.py       Telegram handlerlar
 ai.py        Claude, vositalar, system promptlar
-voice.py     STT va TTS (boshqa xizmatga o'tish uchun faqat shu fayl o'zgaradi)
+voice.py     STT va TTS, Muxlisa AI (boshqa xizmatga o'tish uchun faqat shu fayl o'zgaradi)
 db.py        SQLite va yozilish mantiqi
 admin.py     veb admin panel
 ```
 
 ## 1. O'rnatish
 
-Python 3.11+ kerak.
+Python 3.11+ va ffmpeg kerak (ovoz formatlarini o'zgartirish uchun):
+
+```bash
+sudo apt install -y ffmpeg
+```
 
 ```bash
 git clone <repo-url> barber-bot && cd barber-bot
@@ -37,14 +41,14 @@ nano .env
 | `OWNER_ID` | Ega Telegram ID raqami (@userinfobot ga yozing) |
 | `ADMIN_KEY` | Uzun tasodifiy satr: `openssl rand -hex 16` |
 | `ANTHROPIC_API_KEY` | https://console.anthropic.com -> API Keys |
-| `GOOGLE_APPLICATION_CREDENTIALS` | Google Cloud service account JSON fayli yo'li |
+| `MUXLISA_API_KEY` | https://muxlisa.uz kabineti -> API kalit (hisobda STT va TTS uchun mablag' bo'lsin) |
 | `PUBLIC_URL` | Ixtiyoriy. Admin panel manzili, masalan `http://123.45.67.89:8080`. Berilsa, egaga keladigan xabarda havola bo'ladi |
 | `PORT` | Admin panel porti, standart `8080` |
 
-Google Cloud: loyihada **Cloud Speech-to-Text API** va **Cloud Text-to-Speech API** ni yoqing,
-service account yarating, JSON kalitini yuklab oling va serverga qo'ying (masalan `/opt/barber-bot/google-key.json`).
-Til `uz-UZ`. Agar Google TTS'da o'zbekcha ovoz bo'lmasa yoki boshqa ovoz kerak bo'lsa, `.env` ga `TTS_VOICE=<ovoz nomi>`
-qo'shish mumkin yoki `voice.py` ni Muxlisa AI kabi xizmatga almashtiring (`recognize(path) -> str` va `speak(text, path)` imzolari saqlansin).
+Muxlisa AI: kalit `x-api-key` sarlavhasida yuboriladi. STT soniya bo'yicha, TTS belgi bo'yicha hisoblanadi.
+Standart manzillar `https://service.muxlisa.uz/api/v2/stt` va `.../tts`. Agar kabinetdagi hujjatda manzil, fayl maydoni
+yoki ovoz (spiker) boshqacha bo'lsa, `.env` da `MUXLISA_STT_URL`, `MUXLISA_TTS_URL`, `MUXLISA_STT_FIELD`, `MUXLISA_SPEAKER` ni o'zgartiring.
+Boshqa xizmatga o'tish uchun faqat `voice.py` almashtiriladi (`recognize(path) -> str` va `speak(text, path)` imzolari saqlansin).
 
 Ega botga bir marta `/start` yozishi kerak, aks holda bot egaga xabar yubora olmaydi.
 
@@ -73,15 +77,14 @@ Eng arzon VPS (1 vCPU, 1 GB RAM, Ubuntu 22.04/24.04) yetarli.
 
 ```bash
 # serverda
-sudo apt update && sudo apt install -y python3 python3-venv git
+sudo apt update && sudo apt install -y python3 python3-venv git ffmpeg
 sudo useradd -r -m -d /opt/barber-bot barber
 sudo -u barber git clone <repo-url> /opt/barber-bot/app
 cd /opt/barber-bot/app
 sudo -u barber python3 -m venv .venv
 sudo -u barber .venv/bin/pip install -r requirements.txt
 sudo -u barber cp .env.example .env && sudo -u barber nano .env
-# Google JSON kalitini /opt/barber-bot/google-key.json ga qo'ying:
-sudo chown barber:barber /opt/barber-bot/google-key.json && sudo chmod 600 /opt/barber-bot/google-key.json .env
+sudo chmod 600 .env
 ```
 
 `/etc/systemd/system/barber-bot.service` faylini yarating:

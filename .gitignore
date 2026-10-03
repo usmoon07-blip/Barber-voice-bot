@@ -5,5 +5,3 @@ __pycache__/
 *.pyc
 .venv/
 venv/
-*.json.key
-google-key.json
