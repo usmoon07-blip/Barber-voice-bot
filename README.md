@@ -120,3 +120,17 @@ Zaxira nusxa: `bookings.db` faylini vaqti-vaqti bilan nusxalab qo'ying.
 
 Xavfsizlik: admin panel kaliti URL'da yuradi, shuning uchun imkon bo'lsa domen va HTTPS (masalan Caddy yoki nginx orqali) ishlating
 va `PUBLIC_URL` ni `https://...` qilib qo'ying.
+
+## 6. Telefondan joylash (Railway)
+
+Kompyuter yoki VPS bo'lmasa, hammasini telefon brauzeridan qilish mumkin. Loyihada `Dockerfile` bor (ffmpeg bilan).
+
+1. https://railway.com ga GitHub orqali kiring.
+2. **New Project -> Deploy from GitHub repo -> Barber-voice-bot** ni tanlang.
+3. Servisni oching -> **Variables** -> quyidagilarni qo'shing:
+   `BOT_TOKEN`, `OWNER_ID`, `ADMIN_KEY`, `ANTHROPIC_API_KEY`, `MUXLISA_API_KEY`, `DB_PATH=/data/bookings.db`
+4. Baza o'chib ketmasligi uchun: servis ustida **Volume** qo'shing, Mount path: `/data`.
+5. **Settings -> Networking -> Generate Domain** (port `8080`). Chiqqan manzilni `PUBLIC_URL` sifatida Variables'ga qo'shing.
+6. **Deployments** da loglarni kuzating. Keyin Telegramda botga `/start` yozing.
+
+Admin panel: `https://<railway-domen>/admin?key=ADMIN_KEY`.
