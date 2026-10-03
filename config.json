@@ -1,0 +1,13 @@
+{
+  "business_name": "BARBERSHOP NOMI",
+  "address_info": "Manzil, mo'ljal",
+  "open_hour": 9,
+  "close_hour": 21,
+  "step_minutes": 30,
+  "masters": ["Aziz", "Bobur"],
+  "services": {
+    "soch olish": {"price": 80000, "min": 30},
+    "soqol": {"price": 50000, "min": 30},
+    "soch va soqol": {"price": 120000, "min": 60}
+  }
+}
